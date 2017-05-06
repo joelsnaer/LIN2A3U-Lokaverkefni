@@ -5,14 +5,11 @@ apt-get install nano vim-nox //Install nano text editor to use instead of vim
 nano /etc/hosts //Edit /etc/hosts to configure hostname and domain name
 nano /etc/hostname
 
-//Install DHCP (Figure out more!!!!)
-nano /etc/network/interfaces
-Add to eth0
-auto eth0
-iface eth0 inet dhcp
+//Install DHCP 
+https://wiki.debian.org/DHCP_Server Used this guide on the Debian wiki to help me install the DHCP server
 
 //DNS
-DNS installed with server, system essentials. Set up with IP address already
+DNS installed with server, system essentials. Everything set up already
 
 //Group and Accounts
 Pictures of the setup of users and groups on github
