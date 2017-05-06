@@ -1,0 +1,107 @@
+apt-get install ssh openssh-server //Install ssh server
+
+apt-get install nano vim-nox //Install nano text editor to use instead of vim
+
+nano /etc/hosts //Edit /etc/hosts to configure hostname and domain name
+nano /etc/hostname
+
+//Install DHCP (Figure out more!!!!)
+nano /etc/network/interfaces
+Add to eth0
+auto eth0
+iface eth0 inet dhcp
+
+//DNS
+DNS installed with server, system essentials. Set up with IP address already
+
+//Group and Accounts
+Pictures of the setup of users and groups on github
+
+//Samba
+apt-get install samba
+apt-get install samba-client
+nano /etc/samba/smb.conf
+Workgroups name is WORKGROUP
+Added every user to samba, pictures on github. Not every user is in picture, one of them was out of frame
+Make share definition for all groups, IT and Management have full access, other 2 groups read only
+Changed permissions to allow group full access but user only read
+
+//Give IT and Management ssh access
+nano /etc/ssh/sshd_config
+Edit files to allowgroup IT and Management
+systemctl restart sshd
+
+//Apache2
+apt-get install apache2 to get apache running on site
+picture of default apache website on github
+
+//MYSQL and PHPMYADMIN
+apt get-install mysql-client mysql-server
+
+apt get-install phpmyadmin
+select apache2 for web server you are using and phpmyadmin is installed
+nano /etc/apache2/apache2.conf
+Include /etc/phpmyadmin/apache.conf
+
+mysql -p to login to mysql
+
+create user 'user'@'localhost' IDENTIFIED BY 'password';
+grant all privileges on * . * to 'user' for the users in IT group
+
+grant create ON * . * to 'user' and grant drop ON * . * to 'user' for users in Management group
+
+//Postfix
+apt-get install postfix
+postconf -e "myorigin = joel.local"
+postconf -e "myhostname = server1"
+postconf -e "relay_domains = joel.local"
+postfix reload
+
+//Mailman
+apt-get install mailman
+
+set up mailman with commands from: https://wiki.debian.org/Postfix#Mailman_with_Postfix
+
+//Pure-FTPd
+apt-get install pure-ftpd
+
+groupadd ftpgroup
+useradd -g ftpgroup -d /dev/null -s /etc ftpuser
+pure-pw useradd remo -u ftpuser -g ftpgroup -d /home/pubftp/remo -N 10
+pure-pw mkdb
+pure-pw list
+
+//Quota; https://www.digitalocean.com/community/tutorials/how-to-enable-user-and-group-quotas
+apt-get install quota
+nano /etc/fstab
+edit /etc/fstab to enable quota
+
+mount -o remount /
+quotacheck -cum /
+quotaon /
+
+//Squirrel Mail: https://www.linode.com/docs/email/clients/installing-squirrelmail-on-debian-7
+apt-get install squirrelmail
+
+cp /etc/squirrelmail/apache.conf /etc/apache2/sites-available/squirrelmail.conf
+nano /etc/apache2/sites-available/squirrelmail 
+edit <Files configtest.php so its not commented
+
+ln -s /etc/apacke2/sites-available/squirrelmail /etc/apache2/sites-enabled/
+
+service apache2 reload
+
+afer reseting apache you can go and edit squirrelmail with squirrelmail-configure
+
+//ISPConfig-3
+.1https://www.howtoforge.com/tutorial/ispconfig-automated-install-script/
+
+apt-get update && apt-get -y upgrade
+apt-get install -y unzip
+cd /tmp
+wget --no-check-certificate -O installer.tgz "https://github.com/servisys/ispconfig_setup/tarball/master"
+tar zxvf installer.tgz
+cd *ispconfig*
+bash install.sh
+^^
+Runs the full set-up of ISPConfig-3.1
